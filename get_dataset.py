@@ -6,6 +6,8 @@ def get_datasets(
     data_config: dict,
     shuffle: bool,
     columns: List[str],
+    changing_columns: List[str],
+    changed_columns: List[str],
     is_test: bool,
     test_size: Optional[float] = None
 ) -> DatasetDict:
@@ -19,6 +21,8 @@ def get_datasets(
         dataset_mixer = dataset_mixer, 
         shuffle = shuffle, 
         columns = columns, 
+        changing_name_columns=changing_columns,
+        changed_name_columns=changed_columns,
         is_test = is_test, 
         test_size = test_size
     )
@@ -43,17 +47,21 @@ def mix_datasets(
         
         dataset = load_dataset(name, split = 'all')
         dataset = dataset.select(range(int(len(dataset) * sample_size)))
+        if changing_name_columns is not None:
+            if not isinstance(changing_name_columns, list) or not isinstance(changed_name_columns, list):
+                raise ValueError("changing_name_columns, changed_name_columns은 반드시 List 형태로 들어와야합니다.")
+            
+            if len(changing_name_columns) != len(changed_name_columns):
+                raise ValueError("changing_name_columns와 changed_name_columns은 s`equential 해야하며 1대1 매칭되어야 합니다.")
+            
+            if any(item not in dataset.column_names for item in changing_name_columns):
+                pass
+            else:
+                new_column_names = {old: new for old, new in zip(changing_name_columns, changed_name_columns)}
+                dataset = dataset.rename_columns(new_column_names)
+            
         dataset = dataset.remove_columns([col for col in dataset.column_names if col not in columns])
         
-        if changing_name_columns is not None:
-            
-            if changed_name_columns is None:
-                raise ValueError("changing_name_columns 값을 설정했으면 changed_name_columns도 설정해주세요.")
-            if len(changed_name_columns) != len(changed_name_columns):
-                raise ValueError("changing_name_columns와 changed_name_columns도 1대1 매칭하세요")
-        
-            
-            
         if shuffle:
             dataset = dataset.shuffle(seed = 42)
             
@@ -81,4 +89,4 @@ DATA_CONFIG = {
 
 # data = get_datasets(data_config = DATA_CONFIG, shuffle = True, columns = ['question', 'chosen', 'rejected'], is_test = True, test_size = 0.01)
 
-data = get_datasets(data_config = DATA_CONFIG, shuffle = True, columns = ['question', 'chosen', 'rejected'], is_test = False)
+# data = get_datasets(data_config = DATA_CONFIG, shuffle = True, columns = ['question', 'chosen', 'rejected'], is_test = False)
