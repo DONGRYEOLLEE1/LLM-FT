@@ -1,0 +1,8 @@
+transformers
+peft
+accelerate
+bitsandbytes
+torch
+"unsloth[cu118-ampere-torch230] @ git+https://github.com/unslothai/unsloth.git"
+xformers
+flash-attn
