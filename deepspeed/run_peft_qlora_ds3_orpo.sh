@@ -1,0 +1,37 @@
+accelerate launch --config_file "configs/deepspeed_config_z3_qlora.yaml"  train-orpo.py \
+--seed 100 \
+--model_name_or_path "/data/models/Llama-3-Ko-8B-dare-ties" \
+--output_dir "llama3-orpo-v0.1" \
+--add_special_tokens False \
+--append_concat_token False \
+--max_seq_len 2048 \
+--num_train_epochs 5 \
+--logging_steps 100 \
+--save_steps 100 \
+--save_total_limit 3 \
+--log_level "info" \
+--logging_strategy "steps" \
+--save_strategy "steps" \
+--bf16 True \
+--packing True \
+--learning_rate 8e-6 \
+--lr_scheduler_type "cosine" \
+--weight_decay 1e-4 \
+--warmup_ratio 0.0 \
+--max_grad_norm 1.0 \
+--per_device_train_batch_size 8 \
+--per_device_eval_batch_size 8 \
+--gradient_accumulation_steps 4 \
+--gradient_checkpointing True \
+--use_reentrant True \
+--use_flash_attn True \
+--use_peft_lora True \
+--use_4bit_quantization True \
+--use_nested_quant True \
+--bnb_4bit_compute_dtype "bfloat16" \
+--bnb_4bit_quant_storage_dtype "bfloat16" \
+--run_name "llama3-orpo-v0.1" \
+--lora_r 32 \
+--lora_alpha 32 \
+--lora_dropout 0.05 \
+--lora_target_modules "all-linear"
