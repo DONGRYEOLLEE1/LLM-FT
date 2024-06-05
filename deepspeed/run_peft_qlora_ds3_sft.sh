@@ -17,7 +17,7 @@ accelerate launch --config_file "configs/deepspeed_config_z3_qlora.yaml"  train-
 --weight_decay 1e-4 \
 --warmup_ratio 0.0 \
 --max_grad_norm 1.0 \
---output_dir "llama3-Ko-ASKBIZ-130K-ds3-dare-ties" \
+--output_dir "llama3-sft-v0.1" \
 --per_device_train_batch_size 2 \
 --gradient_accumulation_steps 8 \
 --gradient_checkpointing True \
