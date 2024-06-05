@@ -1,5 +1,6 @@
 from datasets import load_dataset, DatasetDict, concatenate_datasets
 from typing import Optional, List
+import json
 
 
 class DatasetLoader:
@@ -10,7 +11,7 @@ class DatasetLoader:
         self.changing_columns = changing_columns
         self.changed_columns = changed_columns
         
-    def get_datasets(self, test_size: Optional[int], shuffle: bool = True, is_test: bool = False) -> DatasetDict:
+    def get_datasets(self, test_size: Optional[int] = None, shuffle: bool = True, is_test: bool = False) -> DatasetDict:
         
         if type(self.data_config) is not dict:
             raise ValueError(f"Data config {self.data_config} not recognized.")
